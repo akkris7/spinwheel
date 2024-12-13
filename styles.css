@@ -142,3 +142,10 @@ body {
     border-radius: 5px;
     cursor: pointer;
 }
+
+.error-message {
+    display: none;
+    color: red;
+    font-size: 0.9em;
+    margin-top: 5px;
+}

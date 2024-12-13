@@ -49,13 +49,26 @@ closeResultPopup.onclick = function () {
 };
 
 // Handle form submission
+// Handle form submission
+// Handle form submission
 userForm.onsubmit = function (e) {
     e.preventDefault();
     const name = document.getElementById('name').value;
-    const email = document.getElementById('email').value;
+    const phone = document.getElementById('phone').value;
+    const phoneError = document.getElementById('phoneError');
+
+    // Validate Indian phone number
+    const phoneRegex = /^[6-9]\d{9}$/;
+    if (!phoneRegex.test(phone)) {
+        phoneError.textContent = "Invalid phone number.";
+        phoneError.style.display = "block";
+        return;
+    } else {
+        phoneError.style.display = "none"; // Hide error if the phone number is valid
+    }
 
     // Save user data
-    localStorage.setItem('user', JSON.stringify({ name, email }));
+    localStorage.setItem('user', JSON.stringify({ name, phone }));
     formPopup.style.display = 'none';
     spinBtn.removeAttribute('disabled');
 };
