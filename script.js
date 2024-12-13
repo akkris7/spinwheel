@@ -51,26 +51,44 @@ closeResultPopup.onclick = function () {
 // Handle form submission
 // Handle form submission
 // Handle form submission
-userForm.onsubmit = function (e) {
+userForm.onsubmit = async function (e) {
     e.preventDefault();
-    const name = document.getElementById('name').value;
-    const phone = document.getElementById('phone').value;
+
+    const name = document.getElementById('name').value.trim();
+    const phone = document.getElementById('phone').value.trim();
     const phoneError = document.getElementById('phoneError');
 
     // Validate Indian phone number
     const phoneRegex = /^[6-9]\d{9}$/;
     if (!phoneRegex.test(phone)) {
-        phoneError.textContent = "Invalid phone number.";
+        phoneError.textContent = "Invalid phone number. Please enter a valid 10-digit Indian phone number.";
         phoneError.style.display = "block";
         return;
     } else {
-        phoneError.style.display = "none"; // Hide error if the phone number is valid
+        phoneError.style.display = "none"; // Hide error message when valid
     }
 
-    // Save user data
-    localStorage.setItem('user', JSON.stringify({ name, phone }));
-    formPopup.style.display = 'none';
-    spinBtn.removeAttribute('disabled');
+    // Send data to Google Sheets
+    const payload = { name, phone };
+    try {
+        const response = await fetch("YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+        });
+
+        const result = await response.json();
+        if (result.success) {
+            alert("Entry saved successfully!");
+            formPopup.style.display = 'none';
+            spinBtn.removeAttribute('disabled');
+        } else {
+            alert("Failed to save your entry. Please try again.");
+        }
+    } catch (error) {
+        console.error("Error:", error);
+        alert("An error occurred while submitting your entry.");
+    }
 };
 
 // Select a slice based on probabilities
