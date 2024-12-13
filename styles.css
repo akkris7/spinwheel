@@ -149,3 +149,54 @@ body {
     font-size: 0.9em;
     margin-top: 5px;
 }
+
+/* Media query for mobile devices */
+@media (max-width: 768px) {
+    body {
+        flex-direction: column;
+        padding: 20px;
+    }
+
+    .container {
+        width: 300px;
+        height: 300px; /* Adjust wheel size */
+    }
+
+    .pointer {
+        top: 100px; /* Adjust pointer position */
+        width: 20px;
+        height: 30px; /* Resize pointer */
+    }
+
+    .spinBtn {
+        width: 50px;
+        height: 50px; /* Resize spin button */
+        font-size: 0.8em; /* Adjust text size */
+    }
+
+    .wheel .number span {
+        font-size: 1em; /* Reduce font size for slice text */
+    }
+
+    .popup-content {
+        width: 90%; /* Fit the popup within smaller screens */
+        padding: 15px;
+    }
+
+    .popup-content h2 {
+        font-size: 1.5em; /* Adjust heading size */
+    }
+
+    .popup-content input {
+        width: 100%; /* Inputs take full width */
+        font-size: 1em; /* Adjust font size */
+    }
+
+    .popup-content button {
+        font-size: 1em; /* Adjust button size */
+    }
+
+    .error-message {
+        font-size: 0.8em; /* Adjust error message size */
+    }
+}
