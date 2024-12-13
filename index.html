@@ -3,27 +3,41 @@
 <head>
     <title>Spin Wheel</title>
     <link rel="stylesheet" type="text/css" href="styles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
     <div class="container">
-        <div class="spinBtn">Spin</div>
+        <div class="pointer"></div>
         <div class="wheel">
-            <div class="number" style="--i:1;--clr:#db7093;"><span>5% Off</span></div>
-            <div class="number" style="--i:2;--clr:#20b2aa;"><span>So Close</span></div>
-            <div class="number" style="--i:3;--clr:#d63e92;"><span>15% Off</span></div>
-            <div class="number" style="--i:4;--clr:#daa520;"><span>So Close</span></div>
-            <div class="number" style="--i:5;--clr:#4169e1;"><span>20% Off</span></div>
-            <div class="number" style="--i:6;--clr:#ff340f;"><span>No luck today</span></div>
-            <div class="number" style="--i:7;--clr:#ff7f50;"><span>50% Off</span></div>
-            <div class="number" style="--i:8;--clr:#3cb371;"><span>So Close</span></div>
+            <div class="number" style="--i:1;--clr:#f4c430;"><span>5% Off</span></div> <!-- Bright Yellow -->
+            <div class="number" style="--i:2;--clr:#87ceeb;"><span>So Close</span></div> <!-- Light Sky Blue -->
+            <div class="number" style="--i:3;--clr:#ff2600;"><span>50% Off</span></div> <!-- Bright Red -->
+            <div class="number" style="--i:4;--clr:#2f4f4f;"><span>No luck today</span></div> <!-- Dark Slate Gray -->
+            <div class="number" style="--i:5;--clr:#4caf50;"><span>20% Off</span></div> <!-- Vibrant Green -->
+            <div class="number" style="--i:6;--clr:#ffa07a;"><span>So Close</span></div> <!-- Light Salmon -->
+            <div class="number" style="--i:7;--clr:#ff69b4;"><span>15% Off</span></div> <!-- Hot Pink -->
+            <div class="number" style="--i:8;--clr:#add8e6;"><span>So Close</span></div> <!-- Light Blue -->
+        </div>
+        <div class="spinBtn" id="spinBtn" disabled>Spin</div>
+    </div>    
+
+    <!-- Form Popup -->
+    <div id="formPopup" class="popup">
+        <div class="popup-content">
+            <h2>Red Friday 🎉🔥</h2>
+            <form id="userForm">
+                <input type="text" id="name" placeholder="Enter your name" required>
+                <input type="email" id="email" placeholder="Enter your email" required>
+                <button type="submit">Submit</button>
+            </form>
         </div>
     </div>
 
-    <!-- Popup for displaying result -->
-    <div id="popup" class="popup">
+    <!-- Result Popup -->
+    <div id="resultPopup" class="popup">
         <div class="popup-content">
             <p id="resultText"></p>
-            <button id="closePopup">OK</button>
+            <button id="closeResultPopup">OK</button>
         </div>
     </div>
 

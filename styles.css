@@ -11,7 +11,9 @@ body {
     align-items: center;
     min-height: 100vh;
     background: #333;
+    flex-direction: column;
 }
+
 .container {
     position: relative;
     width: 400px;
@@ -20,13 +22,26 @@ body {
     justify-content: center;
     align-items: center;
 }
-.container .spinBtn {
+
+.pointer {
     position: absolute;
-    width: 60px;
-    height: 60px;
+    top: 140px; /* Adjusted to align with the edge of the circle */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30px;
+    height: 40px;
+    background: #fff;
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    z-index: 10;
+}
+
+.spinBtn {
+    position: absolute;
+    width: 70px;
+    height: 70px;
     background: #fff;
     border-radius: 50%;
-    z-index: 10;
+    z-index: 5;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -38,19 +53,14 @@ body {
     cursor: pointer;
     user-select: none;
 }
-.container .spinBtn::before {
-    content: '';
-    position: absolute;
-    top: -28px;
-    width: 20px;
-    height: 30px;
-    background: #fff;
-    clip-path: polygon(50% 0%, 15% 100%, 85% 100%);
+
+.spinBtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
-.container .wheel {
-    position: absolute;
-    top: 0;
-    left: 0;
+
+.wheel {
+    position: relative;
     width: 100%;
     height: 100%;
     background: #333;
@@ -59,7 +69,8 @@ body {
     box-shadow: 0 0 0 5px #333, 0 0 0 15px #fff, 0 0 0 18px #111;
     transition: transform 5s ease-in-out;
 }
-.container .wheel .number {
+
+.wheel .number {
     position: absolute;
     width: 50%;
     height: 50%;
@@ -71,26 +82,23 @@ body {
     justify-content: center;
     align-items: center;
     user-select: none;
-    cursor: pointer;
 }
 
-.container .wheel .number span {
-    position: relative;
+.wheel .number span {
     transform: rotate(45deg);
     font-size: 1.5em;
     font-weight: 700;
     color: #fff;
-    text-shadow: 3px 5px 2px rgba(0, 0, 0, 0.15);
 }
 
-.container .wheel .number:nth-child(6) span {
+.wheel .number:nth-child(4) span { /* Slice 4: No luck today */
     font-size: 1em; /* Smaller font size to fit */
     line-height: 1.2; /* Adjust line height for better spacing */
     word-break: break-word; /* Allow text to break into lines */
     text-align: center; /* Center-align text */
 }
 
-/* Popup styling */
+/* Popup Styling */
 .popup {
     display: none;
     position: fixed;
@@ -106,29 +114,31 @@ body {
 
 .popup-content {
     background: #fff;
-    padding: 20px 30px;
+    padding: 20px;
     border-radius: 10px;
     text-align: center;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
-.popup-content p {
-    font-size: 1.5em;
-    margin: 0 0 20px;
-    color: #333;
+.popup-content h2 {
+    margin-bottom: 20px;
+    color: #e63946; /* Bright red for "Red Friday" */
+    font-size: 2em;
+    font-weight: bold;
+}
+
+.popup-content input {
+    width: 80%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
 }
 
 .popup-content button {
+    padding: 10px 20px;
+    border: none;
     background: #333;
     color: #fff;
-    border: none;
-    padding: 10px 20px;
-    font-size: 1em;
     border-radius: 5px;
     cursor: pointer;
 }
-
-.popup-content button:hover {
-    background: #555;
-}
-

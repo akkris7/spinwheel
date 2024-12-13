@@ -1,67 +1,102 @@
-let wheel = document.querySelector('.wheel');
-let spinBtn = document.querySelector('.spinBtn');
-let popup = document.getElementById('popup');
-let resultText = document.getElementById('resultText');
-let closePopup = document.getElementById('closePopup');
+const wheel = document.querySelector('.wheel');
+const spinBtn = document.getElementById('spinBtn');
+const formPopup = document.getElementById('formPopup');
+const resultPopup = document.getElementById('resultPopup');
+const userForm = document.getElementById('userForm');
+const resultText = document.getElementById('resultText');
+const closeResultPopup = document.getElementById('closeResultPopup');
 
-// Define weighted probabilities for each slice
+// Define prizes in clockwise order as they appear on the wheel
 const prizes = [
-    { label: "5% Off", probability: 10 },    // Top (slice 0)
-    { label: "So Close", probability: 25 }, // Slice 1
-    { label: "15% Off", probability: 10 },  // Slice 2
-    { label: "So Close", probability: 25 }, // Slice 3
-    { label: "20% Off", probability: 0 },   // Slice 4 (excluded)
-    { label: "No luck today", probability: 55 }, // Slice 5
-    { label: "50% Off", probability: 0 },   // Slice 6 (excluded)
-    { label: "So Close", probability: 25 }, // Slice 7
+    "5% Off",         // Slice 1
+    "So Close 😔",    // Slice 2
+    "15% Off",        // Slice 3
+    "So Close 😔",    // Slice 4
+    "20% Off",        // Slice 5 (Excluded)
+    "No luck today 😞", // Slice 6
+    "50% Off",        // Slice 7 (Excluded)
+    "So Close 😔"     // Slice 8
+];
+const probabilities = [
+    10, // 5% Off
+    40, // So Close 😔
+    10, // 15% Off
+    40, // So Close 😔
+    0,  // 20% Off (Excluded)
+    40, // No luck today 😞
+    0,  // 50% Off (Excluded)
+    40  // So Close 😔
 ];
 
-const slices = prizes.length; // Total number of slices
-const sliceAngle = 360 / slices; // Angle per slice
-const cumulativeWeights = prizes.reduce((acc, prize, index) => {
-    const weight = index === 0 ? prize.probability : prize.probability + acc[index - 1];
-    return [...acc, weight];
+// Calculate cumulative weights
+const totalWeight = probabilities.reduce((sum, weight) => sum + weight, 0);
+const cumulativeWeights = probabilities.reduce((acc, weight) => {
+    acc.push((acc.length ? acc[acc.length - 1] : 0) + weight);
+    return acc;
 }, []);
 
-// Generate random prize based on weighted probabilities
-function getRandomPrize() {
-    const random = Math.random() * cumulativeWeights[cumulativeWeights.length - 1];
-    for (let i = 0; i < cumulativeWeights.length; i++) {
-        if (random < cumulativeWeights[i]) {
-            return i; // Return the prize index
-        }
-    }
-    return 0; // Default to the first prize
+// Check if the user has already spun
+const user = localStorage.getItem('user');
+if (!user) {
+    formPopup.style.display = 'flex';
+} else {
+    spinBtn.removeAttribute('disabled');
 }
 
-spinBtn.onclick = function () {
-    const selectedPrizeIndex = getRandomPrize(); // Get a weighted random prize
+// Close result popup
+closeResultPopup.onclick = function () {
+    resultPopup.style.display = 'none';
+};
 
-    const baseRotation = 3600; // Spin multiple full rotations (e.g., 10 full spins)
-    const sliceRotation = selectedPrizeIndex * sliceAngle; // Rotate to the selected slice
-    const offsetToCenter = sliceAngle / 2; // Align pointer to the center of the slice
-    const finalRotation = baseRotation - sliceRotation - offsetToCenter; // Subtract offset for pointer alignment
+// Handle form submission
+userForm.onsubmit = function (e) {
+    e.preventDefault();
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+
+    // Save user data
+    localStorage.setItem('user', JSON.stringify({ name, email }));
+    formPopup.style.display = 'none';
+    spinBtn.removeAttribute('disabled');
+};
+
+// Select a slice based on probabilities
+function getRandomSlice() {
+    const random = Math.random() * totalWeight; // Random number between 0 and total weight
+    for (let i = 0; i < cumulativeWeights.length; i++) {
+        if (random <= cumulativeWeights[i]) {
+            return i; // Return the slice index
+        }
+    }
+    return 0; // Fallback to first slice (shouldn't happen)
+}
+
+// Spin logic
+spinBtn.onclick = function () {
+    if (localStorage.getItem('hasSpun')) {
+        alert("You have already spun the wheel!");
+        return;
+    }
+
+    const randomSlice = getRandomSlice();
+    const extraSpins = 360 * 10; // Ensure multiple full spins
+    const finalAngle = extraSpins + randomSlice * (360 / prizes.length);
 
     // Rotate the wheel
     wheel.style.transition = "transform 5s ease-in-out";
-    wheel.style.transform = `rotate(${finalRotation}deg)`;
+    wheel.style.transform = `rotate(${finalAngle}deg)`;
 
-    // Show result in a popup after the animation ends
     setTimeout(() => {
-        resultText.textContent = `You won: ${prizes[selectedPrizeIndex].label}`;
-        popup.style.display = "flex";
-    }, 5000); // Match the animation duration
+        // Double-check the normalized angle for debugging
+        const normalizedAngle = (finalAngle % 360) + (360 / prizes.length) / 2;
+        const selectedSliceIndex = Math.floor(normalizedAngle / (360 / prizes.length)) % prizes.length;
+
+        // Display the prize
+        const prize = prizes[selectedSliceIndex];
+        resultPopup.style.display = 'flex';
+        resultText.textContent = prize;
+
+        // Save spin status
+        localStorage.setItem('hasSpun', true);
+    }, 5000);
 };
-
-// Close popup functionality
-closePopup.onclick = function () {
-    popup.style.display = "none";
-};
-
-function visualizeSlices() {
-    prizes.forEach((prize, index) => {
-        console.log(`Slice ${index + 1}: ${prize.label}`);
-    });
-}
-
-visualizeSlices();
